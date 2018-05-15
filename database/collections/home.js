@@ -1,6 +1,5 @@
 const mongoose = require("../connect");
 var homeSchema = {
-  id : Number,
   departamento : String,
   nombre : String,
   zoom : Number,

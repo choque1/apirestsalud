@@ -5,14 +5,13 @@ var router = express.Router();
 var Home = require("../../../database/collections/home");
 
 router.post("/home", (req, res) => {
-  if (req.body.id == "" && req.body.lng == ""){
+  if (req.body.departamento == "" && req.body.lng == ""){
      res.status(400).json({
         "msn" : "formato incorrecto"
      });
      return;
   }
   var home = {
-    id : req.body.id,
     departamento : req.body.departamento,
     nombre : req.body.nombre,
     zoom : req.body.zoom,
@@ -26,12 +25,28 @@ router.post("/home", (req, res) => {
      });
   });
 });
-
+//ver todas las casas registradas
 router.get("/home", (req, res, next) => {
   Home.find({}).exec( (error, docs) => {
     res.status(200).json(docs);
   })
 });
+//ver solo una casa mediante el id
+router.get(/home\/[a-z0-9]{1,}$/, (req, res) => {
+  var url = req.url;
+  var id = url.split("/")[2];
+  Home.findOne({_id : id}).exec( (error, docs) => {
+    if (docs != null){
+      res.status(200).json(docs);
+      return;
+    }
+
+    res.status(200).json({
+      "msn" : "No existe la casa"
+    });
+  });
+});
+
 
 
 
